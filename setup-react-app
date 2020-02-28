@@ -1,18 +1,16 @@
 #!/bin/bash
+echo ">> Creating folder"
+mkdir $(pwd)/$1;
+cd $(pwd)/$1;
+
 echo ">> Setting up YARN...";
 yarn init --yes;
 
 echo ">> Running YARN install...";
-yarn add parcel-bundler -D;
-yarn add @babel/core;
-yarn add @babel/preset-env;
-yarn add @babel/preset-react;
-yarn add @babel/plugin-proposal-class-properties -D;
-yarn add react react-dom;
-yarn add @babel/polyfill;
+yarn add react react-dom @babel/polyfill;
+yarn add -D parcel-bundler @babel/core @babel/preset-env @babel/preset-react @babel/plugin-proposal-class-properties;
 
 echo ">> Setting up initial files...";
-
 # .babelrc
 echo '{
   "presets": ["@babel/preset-env", "@babel/preset-react"],
@@ -63,4 +61,27 @@ export default App;" >> src/App.js;
 sed -i '$s/}/,  "scripts": {\n    "dev": "parcel \.\/src\/index.html",\n    "build": "parcel build .\/src\/index.html"\n  }\n}/' package.json;
 jq . package.json > package-new.json;
 rm -rf package.json;
-mv package-new.json package.json
+mv package-new.json package.json;
+
+echo ">> Setting up Git..."
+git init;
+
+# .gitignore
+echo "/node_modules
+/.parcel-cache
+/.pnp
+.pnp.js
+
+/coverage
+
+/build
+
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*" >> .gitignore;
