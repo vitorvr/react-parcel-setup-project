@@ -1,4 +1,4 @@
-
+#!/bin/bash
 echo ">> Setting up YARN...";
 yarn init --yes;
 
@@ -59,3 +59,8 @@ const App = () => {
   );
 };
 export default App;" >> src/App.js;
+
+sed -i '$s/}/,  "scripts": {\n    "dev": "parcel \.\/src\/index.html",\n    "build": "parcel build .\/src\/index.html"\n  }\n}/' package.json;
+jq . package.json > package-new.json;
+rm -rf package.json;
+mv package-new.json package.json
